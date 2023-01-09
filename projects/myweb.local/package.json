@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\"",
+        "prettier": "prettier --end-of-line=lf app/**/* routes/**/* --write"
+    },
+    "devDependencies": {
+        "@prettier/plugin-php": "^0.19.2",
+        "axios": "^1.1.2",
+        "husky": "^8.0.3",
+        "laravel-vite-plugin": "^0.7.2",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "prettier": "^2.8.2",
+        "vite": "^4.0.0"
+    }
+}

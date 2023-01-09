@@ -1,0 +1,74 @@
+ version: "3"
+ services:
+     myweb_nginx:
+         dns:
+           - 8.8.8.8
+           - 4.4.4.4
+         build:
+           context: ./images
+           dockerfile: nginx.Dockerfile
+         working_dir: /var/www/html
+         container_name: myweb_nginx
+         ports:
+           - "8181:80"
+         volumes:
+           - ../projects:/var/www/html
+           - ./logs/nginx_log:/var/log/nginx
+           - ./config/nginx/myweb.conf:/etc/nginx/conf.d/myweb.conf
+         links:
+           - myweb_php
+           - myweb_mysql
+     myweb_php:
+         build:
+           context: ./images
+           dockerfile: php.Dockerfile
+         container_name: myweb_php
+         restart: always
+         volumes:
+             - ../projects:/var/www/html
+             - ./logs/php-fpm/php-fpm.log:/var/log/php-fpm.log
+             - ./config/php-fpm/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+         environment:
+            XDEBUG_MODE: "debug"
+     myweb_mysql:
+         build:
+           context: ./images
+           dockerfile: mysql.Dockerfile
+         container_name: myweb_mysql
+         restart: always
+         ports:
+           - "3310:3306"
+         volumes:
+           - ./data/mysql:/var/lib/mysql
+         command: [
+           --default-authentication-plugin=mysql_native_password,
+           --skip-host-cache
+         ]
+         environment:
+           #MYSQL_ALLOW_EMPTY_PASSWORD:
+           MYSQL_ROOT_PASSWORD: password
+           MYSQL_DATABASE: myweb
+           MYSQL_USER: admin
+           MYSQL_PASSWORD: password
+     myweb_composer:
+         build:
+             context: ./images
+             dockerfile: composer.Dockerfile
+         container_name: myweb_composer
+         links:
+             - myweb_php
+     myweb_redis:
+        build:
+           context: ./images
+           dockerfile: redis.Dockerfile
+        container_name: myweb_redis
+        environment:
+            ALLOW_EMPTY_PASSWORD: "yes"  
+     myweb_mailhog:
+        build:
+           context: ./images
+           dockerfile: mailhog.Dockerfile
+        container_name: myweb_mailhog
+        ports:
+          - "1025:1025"
+          - "8025:8025"
