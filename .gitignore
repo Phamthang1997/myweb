@@ -2,7 +2,7 @@
 /projects/myweb.local/public/build
 /public/hot
 /public/storage
-/projects/myweb.local/storage/*.key
+/projects/myweb.local/storage/
 /projects/myweb.local/vendor
 .env
 .env.backup
@@ -17,3 +17,4 @@ yarn-error.log
 /.idea
 /.vscode
 /docker/data
+/projects/myweb.local/.husky
